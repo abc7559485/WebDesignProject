@@ -1,0 +1,160 @@
+/* 基本卡片樣式 */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .drink-card {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .drink-card:hover {
+     transform: translateY(-6px); 
+     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); 
+    }
+  .drink-card img {
+    width: 100%;
+    max-width: 300px;
+    height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 10px;
+  }
+  
+  /* Modal 視窗 */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    background-color: rgba(0,0,0,0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  .modal.hidden {
+    display: none;
+  }
+  .modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+  .close-btn {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  .cart-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+  .cart-icon {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+  }
+  .cart-dropdown {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 300px;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+  .cart-dropdown.hidden {
+    display: none;
+  }
+  .cart-container:hover .cart-dropdown {
+    display: block;
+  }
+  body { 
+    margin: 0; 
+    font-family: 'Segoe UI', sans-serif; 
+    background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url("img/asset/background-tea.png"); 
+    background-size: cover; 
+    background-attachment: fixed; 
+    background-position: center; 
+    color: #333; 
+  }
+
+  /* header 透明背景與陰影 */ 
+  header { 
+    background-color: rgba(255, 255, 255, 0.85); 
+    color: #1e88e5; 
+    text-align: center; 
+    padding: 1rem; 
+    font-weight: bold; 
+    font-size: 1.5rem; 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); 
+    backdrop-filter: blur(5px); 
+  }
+
+  /* 按鈕統一風格 */ 
+  button, input[type="submit"], #add-to-cart {
+     background-color: #1e88e5; 
+     color: white; 
+     border: none; 
+     padding: 10px 16px; 
+     border-radius: 6px; 
+     font-size: 14px; 
+     cursor: pointer; 
+     transition: background-color 0.2s ease, transform 0.2s ease; 
+    } 
+
+  button:hover, #add-to-cart:hover {
+     background-color: #1565c0; 
+     transform: scale(1.05); 
+    }
+  
+  /* 小彈窗的刪除按鈕（購物車 ❌） */ 
+  .remove-btn {
+    font-size: 12px; 
+    color: #d32f2f; 
+    border: none; 
+    background: none; 
+    cursor: pointer; 
+    float: right; 
+  } 
+  .remove-btn:hover {
+    color: #b71c1c; 
+    transform: scale(1.1); 
+  }
+  header h1 { 
+    font-family: 'Noto Sans TC', sans-serif; 
+    font-weight: 700; 
+    font-size: 2.2rem; 
+    color: #000000; 
+    letter-spacing: 2px; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    background: linear-gradient(to right, #c8e6c9, #fffde7);
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
+  

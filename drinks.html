@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>飲料總覽</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .cart-icon {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      cursor: pointer;
+    }
+    .cart-dropdown {
+      position: absolute;
+      top: 3rem;
+      right: 1rem;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 1rem;
+      display: none;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      width: 200px;
+    }
+    .cart-icon:hover + .cart-dropdown,
+    .cart-dropdown:hover {
+      display: block;
+    }
+    .cart-item {
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+    .cart-total {
+      border-top: 1px solid #ddd;
+      padding-top: 5px;
+      margin-top: 5px;
+      font-weight: bold;
+    }
+    .go-to-order-btn {
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
+    .go-to-order-btn button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .order-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .order-modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .order-modal-content h3 {
+      margin-top: 0;
+    }
+    .order-item {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 4px;
+    }
+    .close-order-modal {
+      float: right;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .order-total {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .pay-button {
+      margin-top: 10px;
+      background-color: green;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header style="position: relative;">
+    <h1>飲料總覽</h1>
+    <button onclick="location.href='index.html'">返回主頁</button>
+  </header>
+
+  <main>
+    <section id="drink-list" class="grid"></section>
+  </main>
+
+  <!-- Modal 彈窗 -->
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+
+    <!-- 已刪除圖片元素 -->
+    <h2 id="modal-name"></h2>
+    <p id="modal-desc"></p>
+
+    <form id="custom-form">
+      <label>甜度：
+        <select name="sweetness">
+          <option value="全糖">全糖</option>
+          <option value="半糖">半糖</option>
+          <option value="微糖">微糖</option>
+          <option value="無糖">無糖</option>
+        </select>
+      </label><br>
+
+      <label>冰塊：
+        <select name="ice">
+          <option value="正常冰">正常冰</option>
+          <option value="少冰">少冰</option>
+          <option value="微冰">微冰</option>
+          <option value="去冰">去冰</option>
+        </select>
+      </label><br>
+
+      <fieldset>
+        <legend>加料：</legend>
+        <label><input type="checkbox" name="toppings" value="珍珠"> 珍珠 (+10)</label><br>
+        <label><input type="checkbox" name="toppings" value="椰果"> 椰果 (+10)</label><br>
+        <label><input type="checkbox" name="toppings" value="仙草"> 仙草 (+10)</label>
+      </fieldset>
+
+      <label>數量：</label> <input type="number" name="quantity" min="1" value="1" required />
+    </form>
+
+    <div id="final-info"></div>
+    <button id="add-to-cart" style="position: absolute; bottom: 1rem; right: 1rem;">加入購物車</button>
+  </div>
+</div>
+
+
+  <div class="cart-container">
+    <img src="img/asset/shopping-cart.png" alt="購物車" class="cart-icon" />
+    <div class="cart-dropdown">
+      <ul id="cart-list"></ul>
+      <p id="cart-total" class="total">總金額：NT$0</p>
+      <div class="go-to-order-btn" id="go-to-order-btn">
+        <button onclick="openOrderModal()">前往訂單</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 訂單明細彈窗 -->
+  <div class="order-modal" id="order-modal">
+    <div class="order-modal-content">
+      <span class="close-order-modal" onclick="closeOrderModal()">&times;</span>
+      <h3>訂單明細</h3>
+      <div id="order-detail-list"></div>
+      <div class="order-total" id="order-total">總金額：NT$0</div>
+      <button class="pay-button">前往付款</button>
+    </div>
+  </div>
+
+  <script src="js/drinks.js"></script>
+  <script>
+    const goToOrderBtn = document.getElementById('go-to-order-btn');
+    const cartList = document.getElementById('cart-list');
+
+    function updateGoToOrderButton() {
+      const hasItems = cartList.querySelectorAll('li').length > 0;
+      goToOrderBtn.style.display = hasItems ? 'block' : 'none';
+    }
+
+    const observer = new MutationObserver(updateGoToOrderButton);
+    observer.observe(cartList, { childList: true, subtree: true });
+
+    // 初始化時檢查
+    updateGoToOrderButton();
+  </script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>茶飲主頁</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@700&display=swap" rel="stylesheet">
+  <style>
+    .cart-icon {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      cursor: pointer;
+    }
+    .cart-dropdown {
+      position: absolute;
+      top: 3rem;
+      right: 1rem;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 1rem;
+      display: none;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      width: 220px;
+    }
+    .cart-icon:hover + .cart-dropdown,
+    .cart-dropdown:hover {
+      display: block;
+    }
+    .cart-item {
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+    .cart-total {
+      border-top: 1px solid #ddd;
+      padding-top: 5px;
+      margin-top: 5px;
+      font-weight: bold;
+    }
+    .go-to-order-btn {
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
+    .go-to-order-btn button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .order-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .order-modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .close-order-modal {
+      float: right;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .pay-button {
+      margin-top: 10px;
+      background-color: green;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>歡迎來到清心茶飲</h1>
+    <button onclick="location.href='drinks.html'">飲料總覽</button>
+  </header>
+
+  <main>
+    <section id="recommendation">
+      <h2>推薦飲品</h2>
+      <div id="recommendation-list"></div>
+    </section>
+  </main>
+  
+  <div class="cart-container">
+    <img src="img/asset/shopping-cart.png" alt="購物車" class="cart-icon" />
+    <div class="cart-dropdown">
+      <ul id="cart-list"></ul>
+      <p id="cart-total" class="cart-total">總金額：NT$0</p>
+      <div class="go-to-order-btn" id="go-to-order-btn">
+        <button onclick="openOrderModal()">前往訂單</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 訂單明細彈窗 -->
+  <div class="order-modal" id="order-modal">
+    <div class="order-modal-content">
+      <span class="close-order-modal" onclick="closeOrderModal()">&times;</span>
+      <h3>訂單明細</h3>
+      <div id="order-detail-list"></div>
+      <div class="cart-total" id="order-total">總金額：NT$0</div>
+      <button class="pay-button" onclick="payOrder()">前往付款</button>
+    </div>
+  </div>
+
+  <script>
+    function updateCartPreview() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const cartList = document.getElementById("cart-list");
+      const cartTotal = document.getElementById("cart-total");
+      const goToOrderBtn = document.getElementById("go-to-order-btn");
+      cartList.innerHTML = "";
+      let total = 0;
+
+      cart.forEach(item => {
+        const li = document.createElement("li");
+        li.className = "cart-item";
+        li.innerHTML = `
+          <strong>${item.name}</strong> × ${item.quantity}<br>
+          <small>小計：NT$${item.total}</small>
+        `;
+        cartList.appendChild(li);
+        total += item.total;
+      });
+
+      cartTotal.textContent = `總金額：NT$${total}`;
+      goToOrderBtn.style.display = cart.length > 0 ? "block" : "none";
+    }
+
+    function openOrderModal() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const detailList = document.getElementById("order-detail-list");
+      const totalField = document.getElementById("order-total");
+      detailList.innerHTML = "";
+      let total = 0;
+
+      cart.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+          <strong>${item.name}</strong> × ${item.quantity}<br>
+          <small>甜度：${item.sweetness}｜冰塊：${item.ice}</small><br>
+          <small>加料：${item.toppings.join(', ') || '無'}</small><br>
+          <small>小計：NT$${item.total}</small>
+        `;
+        detailList.appendChild(div);
+        total += item.total;
+      });
+
+      totalField.textContent = `總金額：NT$${total}`;
+      document.getElementById("order-modal").style.display = "flex";
+    }
+
+    function closeOrderModal() {
+      document.getElementById("order-modal").style.display = "none";
+    }
+
+    function payOrder() {
+      alert("💸 模擬付款成功！感謝您的訂購！");
+      localStorage.removeItem("cart");
+      updateCartPreview();
+      closeOrderModal();
+    }
+
+    document.addEventListener("DOMContentLoaded", updateCartPreview);
+  </script>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
