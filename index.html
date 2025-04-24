@@ -108,7 +108,7 @@
     <img src="img/asset/shopping-cart.png" alt="購物車" class="cart-icon" />
     <div class="cart-dropdown">
       <ul id="cart-list"></ul>
-      <p id="cart-total" class="cart-total">總金額：NT$0</p>
+      <p id="cart-total" class="total">總金額：NT$0</p>
       <div class="go-to-order-btn" id="go-to-order-btn">
         <button onclick="openOrderModal()">前往訂單</button>
       </div>
@@ -121,73 +121,13 @@
       <span class="close-order-modal" onclick="closeOrderModal()">&times;</span>
       <h3>訂單明細</h3>
       <div id="order-detail-list"></div>
-      <div class="cart-total" id="order-total">總金額：NT$0</div>
-      <button class="pay-button" onclick="payOrder()">前往付款</button>
+      <div class="order-total" id="order-total">總金額：NT$0</div>
+      <button class="pay-button">前往付款</button>
     </div>
   </div>
-
-  <script>
-    function updateCartPreview() {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      const cartList = document.getElementById("cart-list");
-      const cartTotal = document.getElementById("cart-total");
-      const goToOrderBtn = document.getElementById("go-to-order-btn");
-      cartList.innerHTML = "";
-      let total = 0;
-
-      cart.forEach(item => {
-        const li = document.createElement("li");
-        li.className = "cart-item";
-        li.innerHTML = `
-          <strong>${item.name}</strong> × ${item.quantity}<br>
-          <small>小計：NT$${item.total}</small>
-        `;
-        cartList.appendChild(li);
-        total += item.total;
-      });
-
-      cartTotal.textContent = `總金額：NT$${total}`;
-      goToOrderBtn.style.display = cart.length > 0 ? "block" : "none";
-    }
-
-    function openOrderModal() {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      const detailList = document.getElementById("order-detail-list");
-      const totalField = document.getElementById("order-total");
-      detailList.innerHTML = "";
-      let total = 0;
-
-      cart.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "cart-item";
-        div.innerHTML = `
-          <strong>${item.name}</strong> × ${item.quantity}<br>
-          <small>甜度：${item.sweetness}｜冰塊：${item.ice}</small><br>
-          <small>加料：${item.toppings.join(', ') || '無'}</small><br>
-          <small>小計：NT$${item.total}</small>
-        `;
-        detailList.appendChild(div);
-        total += item.total;
-      });
-
-      totalField.textContent = `總金額：NT$${total}`;
-      document.getElementById("order-modal").style.display = "flex";
-    }
-
-    function closeOrderModal() {
-      document.getElementById("order-modal").style.display = "none";
-    }
-
-    function payOrder() {
-      alert("💸 模擬付款成功！感謝您的訂購！");
-      localStorage.removeItem("cart");
-      updateCartPreview();
-      closeOrderModal();
-    }
-
-    document.addEventListener("DOMContentLoaded", updateCartPreview);
-  </script>
-
   <script src="js/main.js"></script>
+  <script src="js/drinks.js"></script>
+  <script src="js/cart.js"></script>
+
 </body>
 </html>

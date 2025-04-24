@@ -175,25 +175,11 @@
       <h3>訂單明細</h3>
       <div id="order-detail-list"></div>
       <div class="order-total" id="order-total">總金額：NT$0</div>
-      <button class="pay-button">前往付款</button>
+      <button class="pay-button" onclick="payOrder()">前往付款</button>
     </div>
   </div>
 
   <script src="js/drinks.js"></script>
-  <script>
-    const goToOrderBtn = document.getElementById('go-to-order-btn');
-    const cartList = document.getElementById('cart-list');
-
-    function updateGoToOrderButton() {
-      const hasItems = cartList.querySelectorAll('li').length > 0;
-      goToOrderBtn.style.display = hasItems ? 'block' : 'none';
-    }
-
-    const observer = new MutationObserver(updateGoToOrderButton);
-    observer.observe(cartList, { childList: true, subtree: true });
-
-    // 初始化時檢查
-    updateGoToOrderButton();
-  </script>
+  <script src="js/cart.js"></script>
 </body>
 </html>

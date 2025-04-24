@@ -5,8 +5,6 @@ const modalName = document.getElementById("modal-name");
 const modalDesc = document.getElementById("modal-desc");
 const finalInfo = document.getElementById("final-info");
 const addToCartBtn = document.getElementById("add-to-cart");
-const cartList = document.getElementById("cart-list");
-const cartTotal = document.getElementById("cart-total");
 
 let currentDrink = null;
 let currentSelection = {
@@ -80,27 +78,11 @@ const drinksData = [
     description: "濃郁黑糖與鮮奶的完美搭配。",
     price: 60,
     image: "img/drinks/brownsugar-milk.jpg"
-  },
+  }
 ];
-
-
-// 顯示飲品卡片
-drinksData.forEach(drink => {
-  const card = document.createElement("div");
-  card.className = "drink-card";
-  card.innerHTML = `
-    <img src="${drink.image}" />
-    <h3>${drink.name}</h3>
-    <p>${drink.description}</p>
-    <div class="price">NT$${drink.price}</div>
-  `;
-  card.onclick = () => openModal(drink);
-  drinkList.appendChild(card);
-});
 
 function openModal(drink) {
   currentDrink = drink;
-  // modalImage.src = drink.image;
   modalName.textContent = drink.name;
   modalDesc.textContent = drink.description;
   finalInfo.innerHTML = '';
@@ -174,61 +156,20 @@ addToCartBtn.onclick = () => {
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));
-  updateCartPreview();  // 確保加入購物車後立即更新總金額
+  updateCartPreview();
   alert("✔ 已加入購物車！");
   closeModal();
-  updateGoToOrderButton();
 };
 
-function updateCartPreview() {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cartList.innerHTML = "";
-  let total = 0;
-
-  cart.forEach((item, index) => {
-    const row = document.createElement("li");
-    row.innerHTML = `
-        <div style="margin-bottom: 6px;">
-        <strong>${item.name}</strong> × ${item.quantity}<br> <small>甜度：${item.sweetness}｜冰塊：${item.ice}</small><br> <small>加料：${item.toppings.join(", ") || "無"}</small><br> <small>小計：NT$${item.total}</small>
-        <button class="remove-btn" data-index="${index}">❌</button>
-    `;
-    cartList.appendChild(row);
-    total += item.total;
-  });
-  
-
-  cartTotal.textContent = `總金額：NT$${total}`;
-  console.log('更新總金額成功', total); // debug 用
-
-  cartList.querySelectorAll(".remove-btn").forEach(btn => {
-    btn.onclick = (e) => {
-      const index = parseInt(e.target.dataset.index);
-      removeCartItem(index);
-    };
-  });
-  const goToOrderBtn = document.getElementById("go-to-order-btn");
-  if (goToOrderBtn) {
-     goToOrderBtn.style.display = cart.length > 0 ? "block" : "none"; 
-  }
-}
-
-function removeCartItem(index) {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.splice(index, 1);
-  localStorage.setItem("cart", JSON.stringify(cart));
-  updateCartPreview();
-}
-
-// 打開訂單明細彈窗
 function openOrderModal() {
   const orderModal = document.getElementById("order-modal");
   const orderDetailList = document.getElementById("order-detail-list");
   const orderTotal = document.getElementById("order-total");
-  
+
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   orderDetailList.innerHTML = "";
   let total = 0;
-  
+
   cart.forEach(item => {
     const row = document.createElement("div");
     row.className = "order-item";
@@ -238,24 +179,46 @@ function openOrderModal() {
       <small>加料：${item.toppings.join(", ") || "無"}</small><br>
       <small>小計：NT$${item.total}</small>
     `;
-    total += item.total;
     orderDetailList.appendChild(row);
+    total += item.total;
   });
-  
+
   orderTotal.textContent = `總金額：NT$${total}`;
   orderModal.style.display = "flex";
-  }
-  
-  // 關閉訂單明細
-  function closeOrderModal() {
-  const orderModal = document.getElementById("order-modal");
-  orderModal.style.display = "none";
-  }
-  
-  // 綁定「前往付款」按鈕事件（可根據需求改為跳轉頁面）
-  document.querySelector(".pay-button").onclick = () => {
-  alert("💸 模擬付款成功！感謝您的訂購！");
-  // 可加清空購物車、跳轉付款頁等功
+}
+
+function closeOrderModal() {
+  document.getElementById("order-modal").style.display = "none";
+}
+
+function payOrder() {
+    alert("💸 模擬付款成功！感謝您的訂購！");
+    localStorage.removeItem("cart");  
+    updateCartPreview(); 
+    closeOrderModal();
   }
 
-updateCartPreview();
+document.addEventListener("DOMContentLoaded", () => {
+  drinksData.forEach(drink => {
+    const card = document.createElement("div");
+    card.className = "drink-card";
+    card.innerHTML = `
+      <img src="${drink.image}" />
+      <h3>${drink.name}</h3>
+      <p>${drink.description}</p>
+      <div class="price">NT$${drink.price}</div>
+    `;
+    card.onclick = () => openModal(drink);
+    drinkList.appendChild(card);
+  });
+
+  // 自動打開指定飲料（從 index.html 點進來的）
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = parseInt(urlParams.get("id"));
+  if (id) {
+    const targetDrink = drinksData.find(d => d.id === id);
+    if (targetDrink) {
+      openModal(targetDrink);
+    }
+  }
+});

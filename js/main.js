@@ -82,4 +82,7 @@ const drinksData = [
       <p class="price">NT$${drink.price}</p>
     `;
     recommendationList.appendChild(card);
+    card.onclick = () => {
+       window.location.href = `drinks.html?id=${drink.id}`; 
+    };
   });
