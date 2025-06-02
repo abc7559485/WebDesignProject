@@ -78,6 +78,20 @@ const drinksData = [
     description: "濃郁黑糖與鮮奶的完美搭配。",
     price: 60,
     image: "img/drinks/brownsugar-milk.jpg"
+  },
+  {
+    id: 10,
+    name: "奶蓋黑糖烏龍",
+    description: "黑糖與鹹香奶蓋碰撞出的絕妙風味。",
+    price: 65,
+    image: "img/drinks/BlackSugarMilkTea.png"
+  },
+  {
+    id: 11,
+    name: "芋泥珠珠",
+    description: "濃郁大甲芋泥與小農鮮奶Q彈珍珠的完美結合。",
+    price: 70,
+    image: "img/drinks/idontknowthisname.png"
   }
 ];
 
@@ -192,6 +206,18 @@ function closeOrderModal() {
 }
 
 function payOrder() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (cart.length === 0) return;
+
+    const order = {
+      items: cart,
+      total: cart.reduce((sum, item) => sum + item.total, 0),
+      time: new Date().toLocaleString()
+    };
+
+    const orders = JSON.parse(localStorage.getItem("orders")) || [];
+    orders.push(order);
+    localStorage.setItem("orders", JSON.stringify(orders));
     alert("💸 模擬付款成功！感謝您的訂購！");
     localStorage.removeItem("cart");  
     updateCartPreview(); 

@@ -62,6 +62,20 @@ const drinksData = [
     price: 60,
     image: "img/drinks/brownsugar-milk.jpg"
   },
+  {
+    id: 10,
+    name: "奶蓋黑糖烏龍",
+    description: "黑糖與鹹香奶蓋碰撞出的絕妙風味。",
+    price: 65,
+    image: "img/drinks/BlackSugarMilkTea.png"
+  },
+  {
+    id: 11,
+    name: "芋泥珠珠",
+    description: "濃郁大甲芋泥與小農鮮奶Q彈珍珠的完美結合。",
+    price: 70,
+    image: "img/drinks/idontknowthisname.png"
+  }
 ];
   
   function getRandomDrink(drinks, count = 1) {
@@ -85,4 +99,47 @@ const drinksData = [
     card.onclick = () => {
        window.location.href = `drinks.html?id=${drink.id}`; 
     };
+  });
+
+  function goToLogin() {
+    window.location.href = "login.html"; // 登入頁
+  }
+  
+  function updateUserDropdown() {
+    const userInfo = document.getElementById("user-info");
+    const user = JSON.parse(localStorage.getItem("user"));
+  
+    if (user && user.name && user.email) {
+      userInfo.innerHTML = `
+        <p>👤 ${user.name}</p>
+        <p>${user.email}</p>
+        <p style="font-size: 13px; color: #1e88e5;">點擊前往詳細頁面</p>
+      `;
+    } else {
+      userInfo.innerHTML = `<p>請登入帳號</p>`;
+    }
+  }
+  
+  function logout() {
+    localStorage.removeItem("user");
+    updateUserDropdown();
+  }
+  
+  // 每次載入都更新使用者資訊
+  document.addEventListener("DOMContentLoaded", () => {
+    updateUserDropdown();
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const userIcon = document.getElementById("user-icon");
+    if (userIcon) {
+      userIcon.addEventListener("click", () => {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user && user.name && user.email) {
+          window.location.href = "user.html";  // 登入過，進入使用者頁面
+        } else {
+          window.location.href = "login.html"; // 未登入，導向登入頁
+        }
+      });
+    }
   });

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>使用者頁面 | 清心茶飲</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .user-page {
+      max-width: 600px;
+      margin: 80px auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+    .user-page h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .user-info {
+      margin-bottom: 2rem;
+    }
+    .order {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .order-title {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .no-orders {
+      text-align: center;
+      color: #888;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="user-page">
+    <h2>使用者資料</h2>
+    <div class="user-info" id="user-info">
+      <!-- 使用者資料會顯示在這 -->
+    </div>
+
+    <h2>歷史訂單</h2>
+    <div id="order-list">
+      <!-- 訂單資料會顯示在這 -->
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <button onclick="logout()" style="padding: 10px 20px; border: none; background-color: #d32f2f; color: white; border-radius: 6px; font-size: 16px; cursor: pointer;">
+          登出
+        </button>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <button onclick="location.href='index.html'" style="padding: 10px 20px; border: none; background-color: #1e88e5; color: white; border-radius: 6px; font-size: 16px; cursor: pointer;">
+          ← 返回首頁
+        </button>
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    const orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+    if (!user) {
+      alert("請先登入！");
+      window.location.href = "login.html";
+    } else {
+      // 顯示基本資料
+      document.getElementById("user-info").innerHTML = `
+        <p><strong>姓名：</strong>${user.name}</p>
+        <p><strong>Email：</strong>${user.email}</p>
+      `;
+
+      const orderList = document.getElementById("order-list");
+
+      if (orders.length === 0) {
+        orderList.innerHTML = `<p class="no-orders">尚無歷史訂單</p>`;
+      } else {
+        orders.forEach((order, index) => {
+          const div = document.createElement("div");
+          div.className = "order";
+          div.innerHTML = `
+            <div class="order-title">訂單 #${index + 1} - 共 ${order.items.length} 項</div>
+            <ul>
+              ${order.items.map(item => `
+                <li>${item.name} × ${item.quantity}（${item.sweetness}／${item.ice}，加料：${item.toppings.join("、") || "無"}）- NT$${item.total}</li>
+              `).join("")}
+            </ul>
+            <div><strong>總金額：</strong>NT$${order.total}</div>
+            <div><small>時間：${order.time}</small></div>
+          `;
+          orderList.appendChild(div);
+        });
+      }
+    }
+
+    function logout() {
+        localStorage.removeItem("user");
+        alert("您已成功登出！");
+        window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

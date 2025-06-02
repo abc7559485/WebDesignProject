@@ -104,13 +104,24 @@
     </section>
   </main>
   
-  <div class="cart-container">
-    <img src="img/asset/shopping-cart.png" alt="購物車" class="cart-icon" />
-    <div class="cart-dropdown">
-      <ul id="cart-list"></ul>
-      <p id="cart-total" class="total">總金額：NT$0</p>
-      <div class="go-to-order-btn" id="go-to-order-btn">
-        <button onclick="openOrderModal()">前往訂單</button>
+  <div class="top-right-icons">
+    <div class="user-container">
+      <img src="img/asset/user-icon.png" alt="使用者" class="user-icon" id="user-icon" />
+      <div class="user-dropdown" id="user-dropdown">
+        <div id="user-info">
+          <p><a href="#" onclick="goToLogin()">登入</a></p>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cart-container">
+      <img src="img/asset/shopping-cart.png" alt="購物車" class="cart-icon" />
+      <div class="cart-dropdown">
+        <ul id="cart-list"></ul>
+        <p id="cart-total" class="total">總金額：NT$0</p>
+        <div class="go-to-order-btn" id="go-to-order-btn">
+          <button onclick="openOrderModal()">前往訂單</button>
+        </div>
       </div>
     </div>
   </div>

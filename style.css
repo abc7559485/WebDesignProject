@@ -156,5 +156,79 @@
     padding: 1rem;
     border-radius: 12px;
   }
+
+  /* 使用者圖示與下拉選單 */
+  .user-container {
+    position: fixed;
+    top: 20px;
+    right: 70px; /* 比 cart-icon 靠左一點 */
+    z-index: 1000;
+  }
   
+  
+  .user-dropdown {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 200px;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    display: none;
+  }
+  
+  .user-container:hover .user-dropdown {
+    display: block;
+  }
+  /* 外層容器 - 對齊右上角 */
+.top-right-icons {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 1000;
+}
+
+/* 使用者圖示樣式 */
+.user-container {
+  position: relative;
+}
+
+
+.user-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  transform: translateY(-4px);
+}
+
+/* 使用者資訊懸浮視窗 */
+.user-dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  width: 200px;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  display: none;
+}
+
+.user-container:hover .user-dropdown {
+  display: block;
+}
+.user-dropdown p {
+  margin: 4px 0;
+}
+.user-dropdown p:last-child {
+  font-style: italic;
+}
   

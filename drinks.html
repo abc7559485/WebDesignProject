@@ -157,6 +157,16 @@
 </div>
 
 
+<div class="top-right-icons">
+  <div class="user-container">
+    <img src="img/asset/user-icon.png" alt="使用者" class="user-icon" id="user-icon" />
+    <div class="user-dropdown" id="user-dropdown">
+      <div id="user-info">
+        <p><a href="#" onclick="goToLogin()">登入</a></p>
+      </div>
+    </div>
+  </div>
+
   <div class="cart-container">
     <img src="img/asset/shopping-cart.png" alt="購物車" class="cart-icon" />
     <div class="cart-dropdown">
@@ -167,6 +177,7 @@
       </div>
     </div>
   </div>
+</div>
 
   <!-- 訂單明細彈窗 -->
   <div class="order-modal" id="order-modal">
@@ -181,5 +192,41 @@
 
   <script src="js/drinks.js"></script>
   <script src="js/cart.js"></script>
+  <script>
+    function updateUserDropdown() {
+      const userInfo = document.getElementById("user-info");
+      const user = JSON.parse(localStorage.getItem("user"));
+  
+      if (user && user.name && user.email) {
+        userInfo.innerHTML = `
+          <p>👤 ${user.name}</p>
+          <p>${user.email}</p>
+          <p style="font-size: 13px; color: #1e88e5;">點擊前往詳細頁面</p>
+        `;
+      } else {
+        userInfo.innerHTML = `<p>請登入帳號</p>`;
+      }
+    }
+  
+    function goToLogin() {
+      window.location.href = "login.html";
+    }
+  
+    document.addEventListener("DOMContentLoaded", () => {
+      updateUserDropdown();
+  
+      const userIcon = document.getElementById("user-icon");
+      if (userIcon) {
+        userIcon.addEventListener("click", () => {
+          const user = JSON.parse(localStorage.getItem("user"));
+          if (user && user.name && user.email) {
+            window.location.href = "user.html";
+          } else {
+            window.location.href = "login.html";
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
