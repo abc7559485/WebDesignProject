@@ -104,13 +104,23 @@
     </section>
   </main>
   
-  <div class="cart-container">
-    <img src="img/asset/shopping-cart.png" alt="購物車" class="cart-icon" />
-    <div class="cart-dropdown">
-      <ul id="cart-list"></ul>
-      <p id="cart-total" class="total">總金額：NT$0</p>
-      <div class="go-to-order-btn" id="go-to-order-btn">
-        <button onclick="openOrderModal()">前往訂單</button>
+  <div class="top-right-icons">
+    <div class="user-container">
+      <img src="img/asset/user-icon.png" alt="使用者" class="user-icon" id="user-icon" />
+      <div class="user-dropdown" id="user-dropdown">
+        <div id="user-info">
+        </div>
+      </div>
+    </div>
+  
+    <div class="cart-container">
+      <img src="img/asset/shopping-cart.png" alt="購物車" class="cart-icon" />
+      <div class="cart-dropdown">
+        <ul id="cart-list"></ul>
+        <p id="cart-total" class="total">總金額：NT$0</p>
+        <div class="go-to-order-btn" id="go-to-order-btn">
+          <button onclick="openOrderModal()">前往訂單</button>
+        </div>
       </div>
     </div>
   </div>
@@ -128,6 +138,42 @@
   <script src="js/main.js"></script>
   <script src="js/drinks.js"></script>
   <script src="js/cart.js"></script>
+  <script>
+    async function updateUserDropdown() {
+      const res = await fetch("api/check_login.php");
+      const data = await res.json();
+      const userInfo = document.getElementById("user-info");
+
+      if (!userInfo) return;
+
+      if (data.loggedIn) {
+        userInfo.innerHTML = `
+          <p>👤 ${data.username}</p>
+          <p style="font-size: 13px; color: #1e88e5;">點擊頭像查看個人資料</p>
+        `;
+      } else {
+        userInfo.innerHTML = `<p>尚未登入</p><p style="font-size: 13px; color: #1e88e5;">點擊頭像前往登入</p>`;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateUserDropdown();
+
+      const userIcon = document.getElementById("user-icon");
+      if (userIcon) {
+        userIcon.addEventListener("click", async () => {
+          const res = await fetch("api/check_login.php");
+          const data = await res.json();
+
+          if (data.loggedIn) {
+            window.location.href = "user.html";
+          } else {
+            window.location.href = "login.html";
+          }
+        });
+      }
+    });
+  </script>
 
 </body>
 </html>
