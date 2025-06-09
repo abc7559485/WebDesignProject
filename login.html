@@ -82,13 +82,18 @@
   </div>
 
   <script>
+<<<<<<< HEAD
     async function handleLogin(event) {
+=======
+    function handleLogin(event) {
+>>>>>>> b81d3947160469f726764656f92a69060722ad63
       event.preventDefault();
 
       const email = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value;
       const errorBox = document.getElementById("error");
 
+<<<<<<< HEAD
       const formData = new FormData();
       formData.append("username", email);
       formData.append("password", password);
@@ -104,6 +109,21 @@
         window.location.href = "index.html";
       } else {
         errorBox.textContent = "❌ " + text;
+=======
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      const found = users.find(u => u.email === email && u.password === password);
+
+      if (found) {
+        // 儲存登入資訊
+        localStorage.setItem("user", JSON.stringify({
+          name: found.name,
+          email: found.email
+        }));
+        alert("登入成功！");
+        window.location.href = "index.html";
+      } else {
+        errorBox.textContent = "❌ 帳號或密碼錯誤，請重新確認。";
+>>>>>>> b81d3947160469f726764656f92a69060722ad63
       }
     }
   </script>
